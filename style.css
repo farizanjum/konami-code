@@ -17,6 +17,10 @@ html, body, button, a, div, canvas {
     font-smooth: never;
 }
 
+.hidden {
+    display: none !important;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -313,29 +317,43 @@ body {
 /* Mobile adjustments: arrange breakout controls compactly */
 @media screen and (max-width: 768px) {
     .breakout-controls { 
-        gap: 8px; 
-        padding: 12px 8px; 
-        background-color: rgba(0, 0, 0, 0.95);
+        gap: 12px; 
+        padding: 15px 10px; 
+        background-color: rgba(0, 0, 0, 0.98);
+        border-top: 2px solid #444;
     }
     .btn-action { 
-        width: 52px; 
-        height: 52px; 
-        font-size: 18px;
-        background-color: rgba(20, 20, 20, 0.95);
+        width: 56px; 
+        height: 56px; 
+        font-size: 20px;
+        background-color: rgba(40, 40, 40, 0.98);
         border: 2px solid #fff;
+        color: #fff;
     }
     .btn-left-breakout, .btn-right-breakout { 
-        width: 64px; 
-        height: 64px; 
-        font-size: 22px;
-        background-color: rgba(20, 20, 20, 0.95);
+        width: 72px; 
+        height: 72px; 
+        font-size: 26px;
+        background-color: rgba(40, 40, 40, 0.98);
         border: 2px solid #fff;
+        color: #fff;
+    }
+    
+    #breakoutButtons {
+        background-color: rgba(0, 0, 0, 0.98);
+        border-top: 2px solid #444;
     }
 }
 
 #breakoutButtons {
     width: 100%;
-    display: none;
+    background-color: rgba(0, 0, 0, 0.98);
+    padding: 15px 10px;
+    border-top: 2px solid #333;
+}
+
+#breakoutButtons.hidden {
+    display: none !important;
 }
 
 .btn-left-breakout, .btn-right-breakout {
@@ -343,9 +361,9 @@ body {
     font-size: 24px;
     width: 70px;
     height: 70px;
-    background-color: transparent;
+    background-color: rgba(40, 40, 40, 0.98);
     color: #fff;
-    border: 1px solid #fff;
+    border: 2px solid #fff;
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s;
@@ -359,13 +377,13 @@ body {
 }
 
 .btn-left-breakout:active, .btn-right-breakout:active {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(80, 80, 80, 0.98);
     color: #fff;
     transform: scale(0.9);
 }
 
 .btn-left-breakout.pressed, .btn-right-breakout.pressed {
-    background-color: rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(100, 100, 100, 0.98) !important;
     color: #fff !important;
     transform: scale(0.95) !important;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;

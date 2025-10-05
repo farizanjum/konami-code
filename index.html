@@ -21,11 +21,11 @@
     
     <!-- Mobile Controls -->
     <button id="showControlsBtn" class="show-btn">SHOW CONTROLS</button>
-    <div id="mobileControls" style="display: none;">
+    <div id="mobileControls">
         <button id="hideControlsBtn" class="hide-btn">HIDE CONTROLS</button>
         
         <!-- Snake Game Controls (Full) -->
-        <div id="virtualButtons" style="display: none;">
+        <div id="virtualButtons">
             <div class="controls-row">
                 <div class="left-buttons">
                     <button class="btn-action btn-a" data-key="a">A</button>
@@ -47,14 +47,14 @@
         </div>
         
         <!-- Breakout Game Controls (Only Left/Right) -->
-        <div id="breakoutButtons" style="display: none;">
+        <div id="breakoutButtons" class="hidden">
             <div class="breakout-controls">
-                                <div style="display:flex;gap:12px;align-items:center;">
-                                    <button class="btn-action btn-t" data-key="t">T</button>
-                                    <button class="btn-arrow btn-left-breakout" data-key="ArrowLeft">←</button>
-                                    <button class="btn-arrow btn-right-breakout" data-key="ArrowRight">→</button>
-                                    <button class="btn-action btn-l" data-key="l">L</button>
-                                </div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <button class="btn-action btn-t" data-key="t">T</button>
+                    <button class="btn-arrow btn-left-breakout" data-key="ArrowLeft">←</button>
+                    <button class="btn-arrow btn-right-breakout" data-key="ArrowRight">→</button>
+                    <button class="btn-action btn-l" data-key="l">L</button>
+                </div>
             </div>
         </div>
     </div>

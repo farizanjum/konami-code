@@ -215,13 +215,18 @@ function getKonamiLayoutForMode(mode = 'text') {
 function setCanvasAboveControls(enable) {
     const mobileControls = document.getElementById('mobileControls');
     if (enable) {
+        // Canvas above controls (for snake game)
         canvas.style.zIndex = 2100;
-        canvas.style.pointerEvents = 'none'; // allow buttons underneath to receive touches
-        if (mobileControls) mobileControls.style.zIndex = 2000;
-    } else {
-        canvas.style.zIndex = 0;
         canvas.style.pointerEvents = 'auto';
         if (mobileControls) mobileControls.style.zIndex = 2000;
+    } else {
+        // Controls above canvas (for breakout game)
+        canvas.style.zIndex = 1;
+        canvas.style.pointerEvents = 'auto';
+        if (mobileControls) {
+            mobileControls.style.zIndex = 2000;
+            mobileControls.style.pointerEvents = 'auto';
+        }
     }
 }
 
@@ -1301,15 +1306,26 @@ function setupMobileControls() {
 function updateControlVisibility() {
     const virtualButtons = document.getElementById('virtualButtons');
     const breakoutButtons = document.getElementById('breakoutButtons');
+    const mobileControls = document.getElementById('mobileControls');
     
     if (gameMode === 'breakout') {
         // Show only breakout controls (left/right)
-        if (virtualButtons) virtualButtons.style.display = 'none';
-        if (breakoutButtons) breakoutButtons.style.display = 'block';
+        if (virtualButtons) virtualButtons.classList.add('hidden');
+        if (breakoutButtons) {
+            breakoutButtons.classList.remove('hidden');
+            breakoutButtons.style.display = 'block';
+        }
+        // Ensure mobile controls container is visible on mobile
+        if (window.innerWidth <= 768 && mobileControls) {
+            mobileControls.style.display = 'flex';
+        }
     } else {
         // Show full controls for text mode and snake game
-        if (virtualButtons) virtualButtons.style.display = 'block';
-        if (breakoutButtons) breakoutButtons.style.display = 'none';
+        if (virtualButtons) virtualButtons.classList.remove('hidden');
+        if (breakoutButtons) {
+            breakoutButtons.classList.add('hidden');
+            breakoutButtons.style.display = 'none';
+        }
     }
 }
 
@@ -1323,18 +1339,53 @@ function activateTilesGame() {
     const breakoutButtons = document.getElementById('breakoutButtons');
     const leftButtons = document.querySelector('.left-buttons');
     const rightButtons = document.querySelector('.right-buttons');
+    const mobileControls = document.getElementById('mobileControls');
+    const showControlsBtn = document.getElementById('showControlsBtn');
 
-    if (virtualButtons) virtualButtons.style.display = 'none';
-    if (breakoutButtons) breakoutButtons.style.display = 'block';
+    // Hide snake controls
+    if (virtualButtons) {
+        virtualButtons.classList.add('hidden');
+        virtualButtons.style.display = 'none';
+    }
+    
+    // Show breakout controls
+    if (breakoutButtons) {
+        breakoutButtons.classList.remove('hidden');
+        breakoutButtons.style.display = 'block';
+        breakoutButtons.style.visibility = 'visible';
+        breakoutButtons.style.opacity = '1';
+        console.log('Breakout buttons shown:', {
+            display: breakoutButtons.style.display,
+            visibility: breakoutButtons.style.visibility,
+            opacity: breakoutButtons.style.opacity,
+            classList: breakoutButtons.classList.toString()
+        });
+    }
+    
     if (leftButtons) leftButtons.style.display = 'none';
     if (rightButtons) rightButtons.style.display = 'none';
+
+    // On mobile, auto-show controls for breakout
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && mobileControls && showControlsBtn) {
+        mobileControls.style.display = 'flex';
+        mobileControls.style.visibility = 'visible';
+        showControlsBtn.style.display = 'none';
+        const hideControlsBtn = document.getElementById('hideControlsBtn');
+        if (hideControlsBtn) hideControlsBtn.style.display = 'block';
+        console.log('Mobile controls shown:', {
+            display: mobileControls.style.display,
+            visibility: mobileControls.style.visibility,
+            zIndex: mobileControls.style.zIndex
+        });
+    }
 
     // Update control visibility
     updateControlVisibility();
 
     // Initialize breakout game
-    // Make canvas appear above controls visually (but allow clicks to reach buttons)
-    setCanvasAboveControls(true);
+    // Keep controls ABOVE canvas so buttons are visible
+    setCanvasAboveControls(false);
     initBreakout();
 
     // Start breakout game loop
@@ -1367,6 +1418,11 @@ function initBreakout() {
 }
 
 function breakoutGameLoop() {
+    // Don't run game loop if in win/lose state
+    if (gameMode === 'breakout-win' || gameMode === 'breakout-lose') {
+        return;
+    }
+
     // Update paddle
     if (paddleMovement.left && paddle.x > 0) {
         paddle.x -= paddle.speed;
@@ -1375,13 +1431,10 @@ function breakoutGameLoop() {
         paddle.x += paddle.speed;
     }
 
-    // Keep paddle above controls on mobile
+    // Keep paddle at fixed position above controls on mobile
     const isMobile = window.innerWidth <= 768;
     const controlsHeight = isMobile ? 180 : 0;
-    const minY = canvas.height - controlsHeight - 50;
-    if (paddle.y > minY) {
-        paddle.y = minY;
-    }
+    paddle.y = canvas.height - controlsHeight - 50;
 
     // Update ball
     ball.x += ball.dx;
@@ -1393,16 +1446,23 @@ function breakoutGameLoop() {
     }
     if (ball.y + ball.dy < ball.radius) {
         ball.dy = -ball.dy;
-    } else if (ball.y + ball.dy > canvas.height - ball.radius) {
-        // Ball hits bottom - game over
-        breakoutGameOver();
-        return;
     }
 
-    // Ball collision with paddle
-    if (ball.y + ball.dy > paddle.y && ball.y + ball.dy < paddle.y + paddle.height &&
-        ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-        ball.dy = -ball.dy;
+    // Ball collision with paddle - check first before game over
+    if (ball.y + ball.radius >= paddle.y && 
+        ball.y - ball.radius <= paddle.y + paddle.height &&
+        ball.x >= paddle.x && 
+        ball.x <= paddle.x + paddle.width) {
+        // Only bounce if ball is moving downward
+        if (ball.dy > 0) {
+            ball.dy = -ball.dy;
+            // Prevent ball from getting stuck in paddle
+            ball.y = paddle.y - ball.radius;
+        }
+    } else if (ball.y + ball.dy > paddle.y + paddle.height + ball.radius) {
+        // Ball went below paddle - game over
+        breakoutGameOver();
+        return;
     }
 
     // Ball collision with bricks
@@ -1464,6 +1524,7 @@ function renderBreakout() {
 }
 
 function breakoutGameOver() {
+    gameMode = 'breakout-lose';
     clearInterval(gameLoopInterval);
 
     // Apply blur to canvas
