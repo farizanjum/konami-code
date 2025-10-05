@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>KONAMI CODE</title>
+    <link rel="preload" href="nothing-font-5x7.otf/nothing-font-5x7.otf" as="font" type="font/otf" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="instructions">Try the Konami Code...</div>
+    <div id="overlay" style="display: none;">
+        <div id="overlayText"></div>
+        <div id="overlaySubtext"></div>
+        <a id="giftLink" href="https://tinyurl.com/konami-code-gift" target="_blank">CLICK HERE TO CLAIM YOUR GIFT</a>
+        <div id="overlayFooter"></div>
+    </div>
+    
+    <!-- Mobile Controls -->
+    <button id="showControlsBtn" class="show-btn">SHOW CONTROLS</button>
+    <div id="mobileControls" style="display: none;">
+        <button id="hideControlsBtn" class="hide-btn">HIDE CONTROLS</button>
+        
+        <!-- Snake Game Controls (Full) -->
+        <div id="virtualButtons" style="display: none;">
+            <div class="controls-row">
+                <div class="left-buttons">
+                    <button class="btn-action btn-a" data-key="a">A</button>
+                    <button class="btn-action btn-b" data-key="b">B</button>
+                </div>
+                <div class="dpad">
+                    <button class="btn-arrow btn-up" data-key="ArrowUp">↑</button>
+                    <div class="dpad-middle">
+                        <button class="btn-arrow btn-left" data-key="ArrowLeft">←</button>
+                        <button class="btn-arrow btn-right" data-key="ArrowRight">→</button>
+                    </div>
+                    <button class="btn-arrow btn-down" data-key="ArrowDown">↓</button>
+                </div>
+                <div class="right-buttons">
+                    <button class="btn-action btn-t" data-key="t">T</button>
+                    <button class="btn-action btn-l" data-key="l">L</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Breakout Game Controls (Only Left/Right) -->
+        <div id="breakoutButtons" style="display: none;">
+            <div class="breakout-controls">
+                                <div style="display:flex;gap:12px;align-items:center;">
+                                    <button class="btn-action btn-t" data-key="t">T</button>
+                                    <button class="btn-arrow btn-left-breakout" data-key="ArrowLeft">←</button>
+                                    <button class="btn-arrow btn-right-breakout" data-key="ArrowRight">→</button>
+                                    <button class="btn-action btn-l" data-key="l">L</button>
+                                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

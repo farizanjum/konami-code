@@ -1,0 +1,447 @@
+@font-face {
+    font-family: 'Nothing';
+    src: url('nothing-font-5x7.otf/nothing-font-5x7.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+html {
+    background-color: #000;
+}
+
+html, body, button, a, div, canvas {
+    font-family: 'Nothing', 'Courier New', monospace;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    overflow: hidden;
+    font-family: 'Nothing', monospace;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#gameCanvas {
+    display: block;
+    margin: 0 auto;
+    background-color: #000;
+}
+
+/* Ensure canvas fills screen and is rendered pixelated for the Nothing font */
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    image-rendering: pixelated;
+}
+
+#instructions {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #333;
+    font-size: 12px;
+    font-family: 'Nothing', monospace;
+    text-align: center;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+#instructions:hover {
+    opacity: 1;
+}
+
+a {
+    color: #0f0;
+    text-decoration: none;
+    font-family: 'Nothing', monospace;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    z-index: 9999; /* ensure overlay sits above canvas and controls */
+    cursor: pointer;
+}
+
+#overlayText {
+    font-family: 'Nothing', monospace;
+    font-size: 80px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#overlaySubtext {
+    font-family: 'Nothing', monospace;
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#giftLink {
+    font-family: 'Nothing', monospace;
+    font-size: 20px;
+    text-align: center;
+    margin: 30px 0;
+    pointer-events: all;
+    display: none;
+    animation: giftPulse 1.5s ease-in-out infinite;
+}
+
+/* Ensure overlay elements are readable on mobile and clickable */
+#overlay .btn, #overlay a { z-index: 10000; pointer-events: all; }
+
+@keyframes giftPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+#overlayFooter {
+    font-family: 'Nothing', monospace;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Mobile Controls */
+#showControlsBtn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    font-family: 'Nothing', monospace;
+    font-size: 12px;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    touch-action: manipulation;
+    display: none; /* Hidden by default */
+}
+
+#showControlsBtn:hover, #showControlsBtn:active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+#hideControlsBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 2001;
+    font-family: 'Nothing', monospace;
+    font-size: 10px;
+    padding: 4px 8px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    touch-action: manipulation;
+    display: none; /* Hidden initially */
+}
+
+#hideControlsBtn:hover, #hideControlsBtn:active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+#mobileControls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+    display: none; /* Hidden by default, shown when SHOW CONTROLS is clicked */
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.95);
+    box-sizing: border-box;
+}
+
+/* Make sure mobile controls don't visually cover the top area where bricks are rendered */
+body {
+    padding-bottom: 120px; /* reserve space so KONAMI bricks are visible above controls */
+}
+
+#virtualButtons {
+    background-color: rgba(0, 0, 0, 0.95);
+    padding: 10px;
+    border-radius: 0;
+    border-top: 1px solid #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.controls-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.left-buttons, .right-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dpad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.dpad-middle {
+    display: flex;
+    gap: 25px;
+}
+
+.btn-arrow, .btn-action {
+    font-family: 'Nothing', monospace;
+    font-size: 18px;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.btn-arrow:active, .btn-action:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: scale(0.92);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.btn-arrow.pressed, .btn-action.pressed {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+    transform: scale(0.95) !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
+    animation: buttonPress 0.1s ease-out;
+}
+
+@keyframes buttonPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(0.95); }
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-b, .btn-a, .btn-t, .btn-l {
+    background-color: transparent;
+    font-weight: bold;
+}
+
+/* Breakout-specific controls */
+.breakout-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px 0;
+}
+
+/* Mobile adjustments: arrange breakout controls compactly */
+@media screen and (max-width: 768px) {
+    .breakout-controls { 
+        gap: 8px; 
+        padding: 12px 8px; 
+        background-color: rgba(0, 0, 0, 0.95);
+    }
+    .btn-action { 
+        width: 52px; 
+        height: 52px; 
+        font-size: 18px;
+        background-color: rgba(20, 20, 20, 0.95);
+        border: 2px solid #fff;
+    }
+    .btn-left-breakout, .btn-right-breakout { 
+        width: 64px; 
+        height: 64px; 
+        font-size: 22px;
+        background-color: rgba(20, 20, 20, 0.95);
+        border: 2px solid #fff;
+    }
+}
+
+#breakoutButtons {
+    width: 100%;
+    display: none;
+}
+
+.btn-left-breakout, .btn-right-breakout {
+    font-family: 'Nothing', monospace;
+    font-size: 24px;
+    width: 70px;
+    height: 70px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.btn-left-breakout:active, .btn-right-breakout:active {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transform: scale(0.9);
+}
+
+.btn-left-breakout.pressed, .btn-right-breakout.pressed {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+    transform: scale(0.95) !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
+    animation: buttonPress 0.1s ease-out;
+}
+@media screen and (max-width: 768px) {
+    #showControlsBtn {
+        display: block !important; /* Show only on mobile */
+    }
+    
+    body {
+        padding-bottom: 0; /* Remove padding, controls are fixed */
+    }
+    
+    #gameCanvas {
+        height: 100vh !important; /* Full viewport height */
+        width: 100vw !important;
+    }
+    
+    #instructions {
+        font-size: 10px;
+        bottom: auto;
+        top: 10px;
+        z-index: 100;
+    }
+    
+    #overlay {
+        padding: 0 20px;
+    }
+    
+    #overlayText {
+        font-size: 50px;
+    }
+    
+    #overlaySubtext {
+        font-size: 20px;
+    }
+    
+    #giftLink {
+        font-size: 16px;
+        padding: 10px;
+    }
+    
+    #overlayFooter {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .btn-arrow, .btn-action {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+    }
+    
+    .dpad-middle {
+        gap: 30px;
+    }
+    
+    .controls-row {
+        gap: 15px;
+    }
+    
+    #virtualButtons {
+        padding: 10px;
+    }
+    
+    #overlayText {
+        font-size: 40px;
+    }
+    
+    #overlaySubtext {
+        font-size: 18px;
+    }
+    
+    #giftLink {
+        font-size: 14px;
+    }
+}
