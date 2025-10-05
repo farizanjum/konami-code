@@ -13,7 +13,7 @@ A retro-styled game collection activated by the classic Konami Code cheat sequen
 
 ## Live Demo
 
-Visit: [Your Vercel URL will appear here after deployment]
+Visit: www.trykonamicode.vercel.app
 
 ## Local Development
 
