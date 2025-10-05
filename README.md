@@ -2,7 +2,7 @@
 
 A retro-styled game collection activated by the classic Konami Code cheat sequence. Built with vanilla JavaScript, HTML5 Canvas, and the Nothing 5×7 pixel font.
 
-## 🎮 Features
+## Features
 
 - **Classic Konami Code Detection**: Enter `↑ ↑ ↓ ↓ ← → ← → B A` to start the Snake game
 - **Snake Game**: Eat the "KONAMI CODE" text rendered in pixels
@@ -11,11 +11,11 @@ A retro-styled game collection activated by the classic Konami Code cheat sequen
 - **Nothing Font**: Authentic 5×7 pixel font throughout
 - **Secret Cheat Codes**: Additional sequences to discover
 
-## 🚀 Live Demo
+## Live Demo
 
 Visit: [Your Vercel URL will appear here after deployment]
 
-## 🛠️ Local Development
+## Local Development
 
 1. Clone the repository:
 ```bash
@@ -33,20 +33,20 @@ python -m http.server 8000
 http://localhost:8000
 ```
 
-## 📱 Mobile Controls
+## Mobile Controls
 
 - Tap "SHOW CONTROLS" to reveal on-screen buttons
 - Full directional pad + action buttons for Snake
 - Left/Right arrows + action buttons for Breakout
 
-## 🎯 Cheat Codes
+## Cheat Codes
 
 - **Start Snake Game**: `↑ ↑ ↓ ↓ ← → ← → B A`
 - **Start Breakout**: `↑ ↓ T L`
 - **Instant Win (Snake)**: `↑ ↑ ↓ ↓ ← → ← → A B`
 - **Instant Win (Any Mode)**: `↓ ↑ L T`
 
-## 📦 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 
@@ -62,7 +62,7 @@ vercel
 
 Push to `gh-pages` branch or configure in repository settings.
 
-## 🎨 Font Credits
+## Font Credits
 
 Nothing Font (5×7) - Pixel perfect retro font
 
@@ -70,7 +70,7 @@ Nothing Font (5×7) - Pixel perfect retro font
 
 MIT License - Feel free to use and modify!
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! Open an issue or submit a pull request.
 
